@@ -1,78 +1,66 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Endocrine Disorders Quiz</title>
+<title>Duolingo-Style Interactive Quiz</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
     body {
         font-family: 'Segoe UI', Arial, sans-serif;
         margin: 0;
-        background: #f7f9fb;
+        background: #f7fdf9;
         color: #222;
     }
     #quizWrapper {
-        max-width: 420px;
+        max-width: 480px;
         margin: 0 auto;
-        background: #fff;
         min-height: 100vh;
         display: flex;
         flex-direction: column;
-        border-radius: 0 0 18px 18px;
-        box-shadow: 0 4px 16px rgba(50,56,67,0.05);
     }
     .header {
-        padding: 20px 20px 10px 20px;
-        border-bottom: 1px solid #f0f3f6;
-        background: #eaf4fc;
-        border-radius:0 0 21px 21px;
-        position:relative;
+        padding: 16px 20px 6px 20px;
+        background: #e6f9ec;
+        border-bottom: 2px solid #d3f2da;
+        border-radius: 0 0 18px 18px;
+        position: relative;
     }
     .progress {
         width: 100%;
-        height: 7px;
-        background-color: #e0e7ee;
+        height: 8px;
+        background-color: #cdead5;
         border-radius: 99px;
-        margin-block: 8px 0;
         overflow: hidden;
+        margin-top: 6px;
     }
     .progress-bar {
         height: 100%;
-        border-radius: 99px;
         width: 0%;
-        background: linear-gradient(90deg, #1abc9c 65%, #6ad4d6);
+        background: linear-gradient(90deg, #36c96b, #8ee999);
         transition: width 0.28s;
     }
-    .xp {
-        position:absolute;
-        top: 18px;
-        right:24px;
-        font-size: 1.05em;
-        color: #555;
-        display:flex;
-        align-items:center;
-        gap:3px;
-    }
-    .xp:before {
-        content: "🔷";
-        font-size:1.1em;
-        margin-right:3px;
+    .score {
+        position: absolute;
+        right: 20px;
+        top: 14px;
+        font-weight: 600;
+        color: #22814d;
+        font-size: 1.1em;
     }
     #questionNum {
-        margin-block:4px 0;
-        color: #666;
-        font-weight:500;
+        font-weight: 600;
+        color: #444;
     }
     .content {
-        padding: 24px 24px 16px 24px;
+        padding: 20px;
         flex: 1 1 auto;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
     }
     #questionText {
-        font-size: 1.19em;
-        font-weight: 520;
+        font-size: 1.15em;
+        font-weight: 600;
         margin-bottom: 20px;
     }
     .options {
@@ -81,99 +69,78 @@
         gap: 12px;
     }
     .option-btn {
-        background: #f0f3f8;
-        border: none;
-        font-size: 1.04em;
-        color: #243046;
-        padding: 15px 14px;
-        border-radius: 11px;
-        text-align: left;
-        font-weight: 470;
-        box-shadow: none;
-        transition: background 0.15s, color 0.16s;
-        cursor: pointer;
-        outline: none;
+        background: #eef6ff;
         border: 2px solid transparent;
-    }
-    .option-btn.selected {
-        border: 2px solid #9dbdff;
-        background: #dceafd;
+        font-size: 1em;
+        color: #222;
+        padding: 14px;
+        border-radius: 10px;
+        text-align: left;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.15s, border-color 0.15s;
     }
     .option-btn.correct {
         background: #b4e8ca;
-        color: #226c40;
-        border-color:#8ad4b2;
+        color: #145c36;
+        border-color: #67d795;
     }
     .option-btn.wrong {
-        background: #f9d0cc;
-        color: #d13d2d;
-        border-color: #f2917a;
+        background: #ffd4d0;
+        color: #8a1b11;
+        border-color: #ff948a;
     }
     #feedbackBox {
-        min-height:45px; 
+        min-height: 45px;
         margin: 14px 0 7px 0;
+        font-size: 0.95em;
     }
     #feedbackBox.correct {
-        color: #21a17d;
+        color: #1d8c5d;
         background: #d6f9ec;
         border-left: 4px solid #38dba5;
         padding: 8px 12px;
-        border-radius:7px;
+        border-radius: 7px;
     }
     #feedbackBox.wrong {
         color: #d13d2d;
         background: #ffe2e2;
         border-left: 4px solid #ff8881;
         padding: 8px 12px;
-        border-radius:7px;
+        border-radius: 7px;
     }
-    #explanation {
-        font-size: 0.97em;
-        color: #586075;
-        margin-top:3px;
-        margin-bottom: -1px;
-    }
+    #explanation { margin-top: 4px; color: #444; }
     #nextBtn {
-        margin-top: 20px;
+        margin-top: 18px;
         width: 100%;
         background: linear-gradient(97deg,#5b9fff,#52d084 95%);
         color: #fff;
-        font-size: 1.09em;
-        font-weight: 500;
+        font-size: 1.05em;
+        font-weight: 600;
         border: none;
-        border-radius: 13px;
-        padding: 13px 0;
+        border-radius: 12px;
+        padding: 12px 0;
         cursor: pointer;
-        box-shadow: 0 0 2px #b8d9f8;
-        letter-spacing:.01em;
-        transition: background 0.19s;
         display: none;
     }
-    #nextBtn:active {
-        background: linear-gradient(90deg,#319ad8,#34c273 95%);
-    }
+    #nextBtn:active { background: linear-gradient(90deg,#319ad8,#34c273 95%); }
     #finalResult {
-        padding: 34px 28px;
+        padding: 40px 20px;
         text-align:center;
         font-size: 1.2em;
-        font-weight:600;
+        font-weight: 600;
         color: #178273;
-        letter-spacing:.02em;
-    }
-    @media (max-width: 600px) {
-        #quizWrapper { max-width: 100vw; border-radius: 0;}
-        .header, .content { padding-left: 6vw; padding-right: 6vw;}
-        .content {padding-top:22px;padding-bottom:16px;}
-        #finalResult {padding:11vw 2vw;}
     }
 </style>
 </head>
 <body>
 <div id="quizWrapper">
     <div class="header">
-        <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
-        <div class="xp">3</div>
         <div id="questionNum"></div>
+        <div class="score" id="scoreBox">Score: 0</div>
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
     </div>
     <div class="content" id="quizContent">
         <div id="questionText"></div>
@@ -184,124 +151,33 @@
     <div id="finalResult" style="display:none;"></div>
 </div>
 <script>
-// Quiz Data (10 MCQs)
 const quizData = [
-    {
-        q: "Which statement best describes Type 1 Diabetes Mellitus?",
-        options: {
-            a:"Primarily due to insulin resistance, often in overweight adults",
-            b:"Autoimmune destruction of β-cells leading to absolute insulin deficiency",
-            c:"Caused by excess growth hormone production",
-            d:"Commonly managed without insulin therapy"
-        },
-        answer: "b",
-        explanation: "Type 1 DM is caused by autoimmune β-cell destruction in the pancreas, leading to absolute insulin deficiency."
-    },
-    {
-        q: "In T1DM, basal insulin typically accounts for:",
-        options: {
-            a:"25% of total daily dose",
-            b:"50% of total daily dose",
-            c:"75% of total daily dose",
-            d:"None — only prandial insulin is required"
-        },
-        answer: "b",
-        explanation: "Basal insulin usually provides ~50% of the total daily insulin requirement in T1DM."
-    },
-    {
-        q: "A conservative supplemental rapid-acting insulin dose in T1DM is calculated as:",
-        options: {
-            a:"1 unit per 10 mg/dL above target",
-            b:"1 unit per 20 mg/dL above target",
-            c:"1 unit per 50 mg/dL above target",
-            d:"Sliding scale only, not calculated"
-        },
-        answer: "b",
-        explanation: "A typical correction dose is 1 unit for every 20 mg/dL glucose above target."
-    },
-    {
-        q: "First-line pharmacologic therapy for T2DM (without contraindications) is:",
-        options: {
-            a:"Sulfonylureas",
-            b:"Insulin",
-            c:"Metformin",
-            d:"Acarbose"
-        },
-        answer: "c",
-        explanation: "Metformin is the recommended first-line oral therapy for most T2DM patients unless contraindicated."
-    },
-    {
-        q: "Diagnostic criteria for DKA include all EXCEPT:",
-        options: {
-            a:"Blood glucose > 250 mg/dL",
-            b:"Bicarbonate > 18 mEq/L",
-            c:"pH < 7.3",
-            d:"Moderate ketonemia"
-        },
-        answer: "b",
-        explanation: "DKA requires low bicarbonate (≤18 mEq/L), not elevated."
-    },
-    {
-        q: "When should IV insulin infusion be started in DKA patients?",
-        options: {
-            a:"Immediately on arrival",
-            b:"Only after potassium > 3.3 mEq/L",
-            c:"Only after glucose < 250 mg/dL",
-            d:"Only if bicarbonate < 15 mEq/L"
-        },
-        answer: "b",
-        explanation: "Insulin should not be started until potassium is >3.3 mEq/L to avoid life-threatening hypokalemia."
-    },
-    {
-        q: "Which of the following is typical for HHS compared with DKA?",
-        options: {
-            a:"Greater ketoacidosis",
-            b:"Lower glucose levels",
-            c:"Higher serum osmolarity (>320 mOsm/kg)",
-            d:"Younger age group affected"
-        },
-        answer: "c",
-        explanation: "HHS features high serum osmolarity along with marked hyperglycemia but minimal ketoacidosis."
-    },
-    {
-        q: "In myxedema crisis, which is TRUE?",
-        options: {
-            a:"It often presents with hyperthermia",
-            b:"IV levothyroxine is preferred for initial therapy",
-            c:"Oral thyroxine is equally effective in the acute phase",
-            d:"Hyporeflexia with brisk reflexes is typical"
-        },
-        answer: "b",
-        explanation: "IV levothyroxine is recommended for initial myxedema crisis management for reliable absorption."
-    },
-    {
-        q: "Which is the correct sequence when treating thyroid storm?",
-        options: {
-            a:"Iodine → Thionamide → β-blocker",
-            b:"Thionamide → Iodine (after ≥1 hour) → β-blocker",
-            c:"β-blocker → Iodine → Thionamide",
-            d:"Thionamide → β-blocker → Iodine immediately"
-        },
-        answer: "b",
-        explanation: "Give thionamide first, then iodine ≥1hr later to prevent new hormone synthesis, plus β-blocker."
-    },
-    {
-        q: "The most common cause of primary adrenal insufficiency in the U.S. is:",
-        options: {
-            a:"Tuberculosis",
-            b:"Autoimmune adrenalitis",
-            c:"Hemorrhage from meningococcal sepsis",
-            d:"Pituitary tumor"
-        },
-        answer: "b",
-        explanation: "Autoimmune adrenalitis is the top cause of Addison's disease in the US."
-    }
+    {q:"Which hormone regulates blood calcium by increasing osteoclast activity?",options:{a:"Calcitonin",b:"Parathyroid hormone",c:"Insulin",d:"Aldosterone"},answer:"b",exp:"PTH increases calcium levels by stimulating osteoclast activity."},
+    {q:"The primary storage form of glucose in the liver is:",options:{a:"Glucose-6-phosphate",b:"Glycogen",c:"Lactate",d:"Glucagon"},answer:"b",exp:"The liver stores glucose mainly as glycogen."},
+    {q:"Which gland produces melatonin?",options:{a:"Thyroid gland",b:"Pineal gland",c:"Pituitary gland",d:"Adrenal gland"},answer:"b",exp:"The pineal gland secretes melatonin."},
+    {q:"Which electrolyte disturbance is most likely with Addison's disease?",options:{a:"Hypernatremia",b:"Hyponatremia",c:"Hypercalcemia",d:"Hypokalemia"},answer:"b",exp:"Addison's disease often causes hyponatremia due to aldosterone deficiency."},
+    {q:"The 'fight or flight' hormones are:",options:{a:"Cortisol & GH",b:"Adrenaline & Noradrenaline",c:"Thyroxine & Calcitonin",d:"Insulin & Glucagon"},answer:"b",exp:"Adrenal medulla releases adrenaline & noradrenaline in stress."},
+    {q:"Which is NOT a symptom of hypoglycemia?",options:{a:"Sweating",b:"Confusion",c:"Tachycardia",d:"Polyuria"},answer:"d",exp:"Polyuria is more typical of hyperglycemia/diabetes."},
+    {q:"What’s the first-line drug for hypothyroidism?",options:{a:"Levothyroxine",b:"Liothyronine",c:"Methimazole",d:"Iodine"},answer:"a",exp:"Levothyroxine (synthetic T4) is standard treatment."},
+    {q:"Which mineral is essential for thyroid hormone synthesis?",options:{a:"Iron",b:"Zinc",c:"Iodine",d:"Selenium"},answer:"c",exp:"Iodine is a key component of T3 and T4."},
+    {q:"Which hormone does the anterior pituitary NOT secrete?",options:{a:"GH",b:"Prolactin",c:"TSH",d:"ADH"},answer:"d",exp:"ADH is secreted by posterior pituitary (stored there, made in hypothalamus)."},
+    {q:"Which lab finding is typical in untreated type 1 diabetes?",options:{a:"Hyperglycemia",b:"Low ketones",c:"Alkalosis",d:"Hypoglycemia"},answer:"a",exp:"Hyperglycemia is hallmark due to insulin deficiency."},
+    {q:"Which organ is the target of ACTH?",options:{a:"Adrenal cortex",b:"Adrenal medulla",c:"Thyroid",d:"Liver"},answer:"a",exp:"ACTH stimulates adrenal cortex to produce cortisol."},
+    {q:"Which diabetes medication increases risk of lactic acidosis?",options:{a:"Metformin",b:"Sulfonylureas",c:"SGLT2 inhibitors",d:"DPP-4 inhibitors"},answer:"a",exp:"Metformin can rarely cause lactic acidosis, especially in renal impairment."},
+    {q:"Which vitamin deficiency causes rickets?",options:{a:"Vitamin A",b:"Vitamin C",c:"Vitamin D",d:"Vitamin K"},answer:"c",exp:"Vitamin D deficiency causes rickets in children."},
+    {q:"The main stimulus for ADH release is:",options:{a:"Low glucose",b:"Low osmolarity",c:"High plasma osmolarity",d:"Low potassium"},answer:"c",exp:"ADH is released when plasma osmolarity is high or volume is low."},
+    {q:"Which pancreatic cells produce insulin?",options:{a:"Alpha cells",b:"Beta cells",c:"Delta cells",d:"PP cells"},answer:"b",exp:"Beta cells of pancreas produce insulin."},
+    {q:"Graves’ disease involves antibodies that stimulate which receptor?",options:{a:"TSH receptor",b:"Insulin receptor",c:"PTH receptor",d:"Cortisol receptor"},answer:"a",exp:"TSH receptor antibodies cause excess thyroid hormone production."},
+    {q:"Kussmaul respiration is classically seen in:",options:{a:"Hypoglycemia",b:"Hyperosmolar state",c:"DKA",d:"Myxedema"},answer:"c",exp:"DKA compensation for metabolic acidosis causes deep, rapid breathing."},
+    {q:"Which hormone increases after a carbohydrate-rich meal?",options:{a:"Glucagon",b:"Insulin",c:"Cortisol",d:"GH"},answer:"b",exp:"Insulin rises after meals to promote glucose uptake."},
+    {q:"The primary effect of calcitonin is:",options:{a:"Increase blood calcium",b:"Decrease blood calcium",c:"Increase blood glucose",d:"Increase sodium reabsorption"},answer:"b",exp:"Calcitonin lowers blood calcium by inhibiting osteoclast activity."},
+    {q:"Which lab marker best reflects average blood glucose over 3 months?",options:{a:"Fasting plasma glucose",b:"Random plasma glucose",c:"HbA1c",d:"Oral glucose tolerance test"},answer:"c",exp:"HbA1c reflects average glucose over 2-3 months."}
 ];
 
 let current = 0, score = 0, total = quizData.length;
 
 const progressBar = document.getElementById("progressBar");
-const xpDisplay = document.querySelector('.xp');
+const scoreBox = document.getElementById("scoreBox");
 const questionNum = document.getElementById("questionNum");
 const questionText = document.getElementById("questionText");
 const optionsBox = document.getElementById("optionsBox");
@@ -314,19 +190,15 @@ function loadQuestion() {
     feedbackBox.innerHTML = "";
     feedbackBox.className = "";
     nextBtn.style.display = "none";
-    // Progress bar
     let pct = (current) / total * 100;
     progressBar.style.width = pct + '%';
-    // Question number
     questionNum.textContent = `Question ${current+1} of ${total}`;
-    // Set question
     questionText.textContent = quizData[current].q;
-    // Set options
     optionsBox.innerHTML = '';
     for (let key in quizData[current].options) {
         const btn = document.createElement("button");
         btn.className = "option-btn";
-        btn.textContent = quizData[current].options[key];
+        btn.textContent = `${key}) ${quizData[current].options[key]}`;
         btn.setAttribute('data-key', key);
         btn.onclick = () => selectOption(btn, key);
         optionsBox.appendChild(btn);
@@ -334,25 +206,22 @@ function loadQuestion() {
 }
 
 function selectOption(btn, key) {
-    // Prevent selecting again
     Array.from(optionsBox.children).forEach(b => b.disabled = true);
     const correct = quizData[current].answer;
-    // Style all buttons
     Array.from(optionsBox.children).forEach(b => {
         if (b.getAttribute('data-key') === correct) b.classList.add('correct');
         if (b === btn && key !== correct) b.classList.add('wrong');
-        if (b === btn) b.classList.add('selected');
     });
-    // Feedback
     if (key === correct) {
-        feedbackBox.innerHTML = `<b>That's correct!</b>`;
+        feedbackBox.innerHTML = `<b>Correct!</b>`;
         feedbackBox.className = "correct";
         score++;
+        scoreBox.textContent = `Score: ${score}`;
     } else {
-        feedbackBox.innerHTML = `<b>Sorry, that's wrong!</b>`;
+        feedbackBox.innerHTML = `<b>Oops!</b> The correct answer was <b>${correct}) ${quizData[current].options[correct]}</b>.`;
         feedbackBox.className = "wrong";
     }
-    feedbackBox.innerHTML += `<div id="explanation">${quizData[current].explanation}</div>`;
+    feedbackBox.innerHTML += `<div id="explanation">${quizData[current].exp}</div>`;
     nextBtn.style.display = "block";
 }
 
@@ -361,15 +230,13 @@ nextBtn.onclick = () => {
     if(current < total) {
         loadQuestion();
     } else {
-        // Quiz done
-        quizContent.style.display = "none";
         progressBar.style.width = '100%';
+        quizContent.style.display = "none";
         finalResult.style.display = "block";
-        finalResult.innerHTML = `🎉 <b>Quiz Completed!</b><br>Your score: <b>${score}</b> out of <b>${total}</b>.`;
+        finalResult.innerHTML = `🎉 Quiz Completed!<br>Your final score: <b>${score}</b> out of <b>${total}</b>.`;
     }
 };
 
-// Initial display
 loadQuestion();
 </script>
 </body>
